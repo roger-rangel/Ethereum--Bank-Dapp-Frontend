@@ -3,7 +3,9 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-This is the completed code for the Bank DAPP.
+This is the frontend code for the Bank DAPP.
+
+# ![showcase](public/Bank Final Project.png)
 
 ## To Install
 
