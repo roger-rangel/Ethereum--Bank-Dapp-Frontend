@@ -5,7 +5,7 @@
 
 This is the frontend code for the Bank DAPP.
 
-# ![showcase](public/Bank Final Project.png)
+# ![showcase](public/Bank%20Final%20Project.png)
 
 ## To Install
 
