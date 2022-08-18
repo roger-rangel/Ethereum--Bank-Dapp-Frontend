@@ -35,7 +35,14 @@ function App() {
 
   const getBankName = async () => {
     try {
-      //your code here
+      if(window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.Signer();
+        const bankContract = new ethers.Contract(contractAddress, contractABI, signer);
+        let bankName = setCurrentBankName(bankContract.bankName);
+        bankName = utils.parseBytes32String(bankName);
+        setCurrentBankName(bankName.toString());
+      }
     } catch (error) {
       console.log(error);
     }
