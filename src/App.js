@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import { ethers, utils } from "ethers";
 import abi from "./contracts/Bank.json";
@@ -12,12 +13,21 @@ function App() {
   const [customerAddress, setCustomerAddress] = useState(null);
   const [error, setError] = useState(null);
 
-  const contractAddress = 'YOUR_CONTRACT_ADDRESS';
+  const contractAddress = `${process.env.YOUR_CONTRACT_ADDRESS}`; 
   const contractABI = abi.abi;
 
   const checkIfWalletIsConnected = async () => {
     try {
-      //your code here
+      if (window.ethereum) {
+        const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
+        const account = accounts[0];
+        setIsWalletConnected(true);
+        setCustomerAddress(account);
+        console.log("Account connected:", account);
+      } else {
+        setError("Make sure you you have a Metamask wallet or that you are connected to the right network")
+        console.log("No Metamask detected")
+      }  
     } catch (error) {
       console.log(error);
     }
