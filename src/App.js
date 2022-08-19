@@ -35,13 +35,16 @@ function App() {
 
   const getBankName = async () => {
     try {
-      if(window.ethereum) {
+      if (window.ethereum) {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.Signer();
         const bankContract = new ethers.Contract(contractAddress, contractABI, signer);
-        let bankName = setCurrentBankName(bankContract.bankName);
+        let bankName = await bankContract.bankName();
         bankName = utils.parseBytes32String(bankName);
         setCurrentBankName(bankName.toString());
+      } else {
+        console.log("Ethereum object not found, install Metamask");
+        setError("Please install a Metamask wallet to use our bank")
       }
     } catch (error) {
       console.log(error);
@@ -51,7 +54,20 @@ function App() {
   const setBankNameHandler = async (event) => {
     event.preventDefault();
     try {
-      //your code here
+      if (window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const bankContract = new ethers.Contract(contractAddress, contractABI, signer);
+  
+        const txn = await bankContract.setBankName(utils.formatBytes32String(inputValue.bankName));
+        console.log("Setting Bank Name...");
+        await txn.wait();
+        console.log("Bank Name Changed", txn.hash);
+        await getBankName();
+      } else {
+        console.log("Ethereum object not found, install Metamask");
+        setError("Please install a Metamask wallet to use our bank")
+      }
     } catch (error) {
       console.log(error);
     }
