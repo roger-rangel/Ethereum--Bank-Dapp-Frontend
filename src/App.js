@@ -111,7 +111,7 @@ function App() {
         const balance = await bankContract.getCustomerBalance();
         setCustomerTotalBalance(utils.formatEther(balance))
         console.log("Retrieved balance...", balance)
-        
+
       } else {
         console.log("Ethereum object not found, install Metamask");
         setError("Please install a Metamask wallet to use our bank")
@@ -151,7 +151,22 @@ function App() {
 
   const withDrawMoneyHandler = async (event) => {
     try {
-      //your code here
+      if (window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.newSigner();
+        const bankContract = new ethers.Contract(contractAddress, contractABI, signer);
+
+        const txn = await bankContract.withdrawMoney({value: ethers.utils.parseEther(inputValue.withdraw)});
+        console.log("Withdrawing money...please wait, this can take a few minutes");
+        await txn.wait()
+        console.log("Amount withdrawn...", txn.hash)
+
+        customerBalanceHandler();
+
+      } else {
+        console.log("Ethereum object not found, install Metamask");
+        setError("Please install a Metamask wallet to use our bank")
+      }
     } catch (error) {
       console.log(error);
     }
