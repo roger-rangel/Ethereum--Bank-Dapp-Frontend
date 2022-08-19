@@ -103,7 +103,18 @@ function App() {
 
   const customerBalanceHandler = async () => {
     try {
-      //your code here
+      if (window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.newSigner();
+        const bankContract = new ethers.Contract(contractAddress, contractABI, signer);
+  
+        const balance = await bankContract.getCustomerBalance();
+        setCustomerTotalBalance(utils.formatEther(balance))
+        console.log("Retrieved balance...", balance)
+      } else {
+        console.log("Ethereum object not found, install Metamask");
+        setError("Please install a Metamask wallet to use our bank")
+      }
     } catch (error) {
       console.log(error);
     }
